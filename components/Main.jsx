@@ -1,19 +1,22 @@
-import {useState} from 'react'
-export default function Main (){
+import React from 'react'
+import ClaudeRecipe from './ClaudeRecipe'
+import IngredientsList from './IngredientsList'
 
-    const [ingredients, setIngredients] = useState([])
+export default function Main (){
+    const [ingredients, setIngredients] = React.useState([])
     
-    const ingredientsListItems = ingredients.map(ingredient => (
-        <li key={ingredient}>{ingredient}</li>
-    ))
+    const [recipeShown, setRecipeShown] =React.useState(false);
+
+    function toggleRecipeShown() {
+        setRecipeShown(prev => !prev);
+    }
 
     function addIngredient(formData) {
         const newIngredient= formData.get("ingredient")
-        setIngredients(prevIngredients => [...prevIngredients, newIngredient])
-        console.log(newIngredient)
-    
-    }
+        if (!newIngredient) return;
 
+        setIngredients(prev => [...prev, newIngredient])
+    }
     return (
         <main>
             <form action ={addIngredient} className="add-ingredient-form">
@@ -25,20 +28,14 @@ export default function Main (){
                 />
                 <button>Add ingredient</button>
             </form>
-        {ingredients.length > 0 &&
-            <section>
-                <h2>Ingredients on hand:</h2>
-                <ul className="ingredients-list" aria-live="polite">{ingredientsListItems}</ul>
-                {ingredients.length > 3 && 
-                <div className="get-recipe-container">
-                    <div>
-                        <h3>Ready for a recipe?</h3>
-                        <p>Generate a recipe from your list of ingredients.</p>
-                    </div>
-                    <button>Get a recipe</button>
-                </div>}
-            </section>
-        }
+            {ingredients.length > 0 && (
+                <IngredientsList
+                    ingredients={ingredients}
+                    toggleRecipeShown={toggleRecipeShown}
+                />
+            )}
+
+            {recipeShown && <ClaudeRecipe />}
         </main>
     )
 }
