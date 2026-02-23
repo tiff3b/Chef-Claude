@@ -2,6 +2,8 @@ import React from 'react'
 import ClaudeRecipe from './ClaudeRecipe'
 import IngredientsList from './IngredientsList'
 
+const apiKey=import.meta.env.VITE_API_KEY
+
 export default function Main (){
     const [ingredients, setIngredients] = React.useState([])
     
